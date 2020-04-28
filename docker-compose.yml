@@ -1,0 +1,47 @@
+version: "3.5"
+services:
+  php_fpm:
+      build: .
+      container_name: ingredient_fpm
+      working_dir: /usr/share/nginx/ingredient
+      networks:
+        - ingredient
+      volumes:
+          - ./:/usr/share/nginx/ingredient
+  nginx:
+      image: nginx:1.15
+      container_name: ingredient_nginx
+      working_dir: /usr/share/nginx/ingredient
+      networks:
+        - ingredient
+      ports:
+          - "8080:80"
+      volumes:
+          - ./:/usr/share/nginx/ingredient
+          - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+  mysql:
+      image: mysql:5.7
+      container_name: ingredient_mysql
+      networks:
+        - ingredient
+      environment:
+        - MYSQL_DATABASE=ingredient_api
+        - MYSQL_ROOT_PASSWORD=somethingReallySuperSecret
+        - MYSQL_USER=guest
+        - MYSQL_PASSWORD=somethingLessSecretive
+
+  pma:
+    container_name: ingredient-pma
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "44677:80"
+    environment:
+      - "PMA_HOST=ingredient_mysql"
+      - "MYSQL_DATABASE=ingredient_api"
+      - "MYSQL_ROOT_PASSWORD=somethingReallySuperSecret"
+    networks:
+      - ingredient
+
+networks:
+  ingredient:
+    driver: bridge
