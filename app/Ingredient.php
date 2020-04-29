@@ -14,6 +14,8 @@ class Ingredient extends Model
 
     protected $hidden = [
         'pivot',
+        'created_at',
+        'updated_at',
         'laravel_through_key',
     ];
 
@@ -30,7 +32,7 @@ class Ingredient extends Model
 
     public function recipe()
     {
-        return $this->belongsToMany('App\Recipe')->withTimestamps();
+        return $this->belongsToMany('App\Recipe')->withPivot('amount')->withTimestamps();
     }
 
 }

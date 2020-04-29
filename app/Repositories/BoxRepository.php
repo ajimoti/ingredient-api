@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Box;
+use Carbon\Carbon;
 use App\Repositories\Interfaces\BoxInterface;
 
 class BoxRepository extends BaseRepository implements BoxInterface
@@ -26,4 +27,16 @@ class BoxRepository extends BaseRepository implements BoxInterface
 
         return $this->model;
    }
+
+   public function betweenDeliveryDates($firstDate, $secondDate) : Object
+   {
+        return $this->model->betweenDeliveryDates($firstDate, $secondDate);
+   }
+
+    public function orderBoxes(object $request) : object
+    {
+        $orderDate = Carbon::parse($request->order_date);
+        $sevenDaysFromOrderDate = Carbon::parse($request->order_date)->addDays(7);
+        return $this->model->betweenDeliveryDates($orderDate, $sevenDaysFromOrderDate)->get();
+    }
 }

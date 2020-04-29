@@ -26,15 +26,10 @@ class BoxService
     {
         $box = DB::transaction( function () use ($request) {
             $box = $this->box->create($request);
-// dd($this->structureRecipeRequest($request->recipe_ids, $box->id));
 
             $this->boxRecipe->insert(
                 $this->structureRecipeRequest($request->recipe_ids, $box->id)
             );
-
-            // $box->recipes()->create(
-            //     $this->structureRecipeRequest($request->recipe_ids)
-            // );
 
             return $box->load('recipes');
         });

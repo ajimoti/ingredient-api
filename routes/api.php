@@ -32,3 +32,7 @@ Route::prefix('box')->name('box.')->group(function () {
     Route::post('/create', 'BoxController@create')->name('create');
 });
 
+Route::prefix('company')->name('order.')->group(function () {
+    Route::post('/ingredients', 'OrderController@fulfill');
+});
+

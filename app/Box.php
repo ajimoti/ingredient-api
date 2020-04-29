@@ -9,6 +9,8 @@ class Box extends Model
 
     protected $hidden = [
         'pivot',
+        'created_at',
+        'updated_at',
         'laravel_through_key',
     ];
 
@@ -17,15 +19,19 @@ class Box extends Model
         'delivery_date'
     ];
 
+    protected $with = [
+        'recipes'
+    ];
+
     public function recipes()
     {
         return $this->hasManyThrough(
-            'App\Recipe',
+            'App\IngredientRecipe',
             'App\BoxRecipe',
             'box_id',
+            'recipe_id',
             'id',
-            'id',
-            'recipe_id'
+            'id'
         );
     }
 
@@ -33,4 +39,10 @@ class Box extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function scopeBetweenDeliveryDates($query, $firstDate, $secondDate)
+    {
+        return $query->whereBetween('delivery_date', [$firstDate, $secondDate]);
+    }
+
 }

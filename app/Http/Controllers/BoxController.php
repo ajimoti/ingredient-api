@@ -15,16 +15,10 @@ class BoxController extends Controller
         $this->box = $box;
     }
 
-    public function index()
-    {
-        //
-    }
-
     public function create(BoxStoreRequest $request) : object
     {
         $validated = $request->validated();
 
-        // dd('her');
         return $this->sendJson(
             $this->box->create($request)->toArray(),
             "Box created",
