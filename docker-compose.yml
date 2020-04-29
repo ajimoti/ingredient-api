@@ -2,7 +2,7 @@ version: "3.5"
 services:
   php_fpm:
       build: .
-      container_name: ingredient_fpm
+      container_name: ingredient_api
       working_dir: /usr/share/nginx/ingredient
       networks:
         - ingredient

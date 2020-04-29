@@ -17,3 +17,18 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('ingredient')->name('ingredient.')->group(function () {
+    Route::get('/list', 'IngredientController@index')->name('list');
+    Route::post('/create', 'IngredientController@create')->name('create');
+});
+
+Route::prefix('recipe')->name('recipe.')->group(function () {
+    Route::get('/list', 'RecipeController@index')->name('list');
+    Route::post('/create', 'RecipeController@create')->name('create');
+});
+
+Route::prefix('box')->name('box.')->group(function () {
+    Route::post('/create', 'BoxController@create')->name('create');
+});
+

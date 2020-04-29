@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateIngredientsTable extends Migration
+class CreateBoxRecipesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateIngredientsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ingredients', function (Blueprint $table) {
+        Schema::create('box_recipes', function (Blueprint $table) {
             $table->id();
-            $table->char('name');
-            $table->char('measure');
-            $table->char('supplier');
+            $table->unsignedBigInteger('box_id');
+            $table->unsignedBigInteger('recipe_id');
             $table->timestamps();
+
+            $table->foreign('box_id')->references('id')->on('boxes');
+            $table->foreign('recipe_id')->references('id')->on('recipes');
         });
     }
 
@@ -29,8 +31,6 @@ class CreateIngredientsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::dropIfExists('ingredients');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        Schema::dropIfExists('box_recipes');
     }
 }
