@@ -12,45 +12,56 @@ class OrderService
     protected $box;
     protected $recipe;
 
-    public function __construct(
-        BoxRepository $box,
-        RecipeRepository $recipe
-    )
+    public function __construct(BoxRepository $box, RecipeRepository $recipe)
 	{
 		$this->box = $box;
 		$this->recipe = $recipe;
     }
 
-    public function fulfill(object $request)
+    public function fulfill(object $request) : object
     {
         $boxes = $this->box->orderBoxes($request);
-        $ingredientsAndAmounts = $this->ingredientsToTotalAmounts($boxes);
 
+        $ingredientsAndAmounts = $this->ingredientsToTotalAmount($boxes);
 
         return collect($ingredientsAndAmounts);
     }
 
-    private function ingredientsToTotalAmounts(object $boxes) : array
+    private function ingredientsToTotalAmount(object $boxes) : array
     {
-        $ingredientsAndAmounts = [];
+        $response = [];
         foreach ($boxes as $box) {
-            $recipeIngredients = $box->recipes->map->only(['ingredient_id', 'amount']);
+            $recipeAndIngredients = $box->recipes->map->only(['ingredient_id', 'amount', 'ingredient']);
 
-            foreach ($recipeIngredients->toArray() as $value) {
-
-                if (isset($ingredientsAndAmounts[$value['ingredient_id']])) {
-                    $amount = $ingredientsAndAmounts[$value['ingredient_id']] + $value['amount'];
-                }
-                else {
-                    $amount = $value['amount'];
-                }
-
-                $ingredientsAndAmounts[$value['ingredient_id']] = $amount;
-
+            foreach ($recipeAndIngredients->toArray() as $ingredient) {
+                $amount = $this->sumAmount($response, $ingredient);
+                $response = $this->structureResponse($response, $ingredient, $amount);
             }
         }
 
-        return $ingredientsAndAmounts;
+        return array_values($response);
     }
 
+
+    private function sumAmount(array $response, array $ingredient) : int
+    {
+        if (isset($response[$ingredient['ingredient_id']])) {
+            $amount = $response[$ingredient['ingredient_id']]['ingredient_amount'] + $ingredient['amount'];
+        }
+        else {
+            $amount = $ingredient['amount'];
+        }
+
+        return $amount;
+    }
+
+    private function structureResponse(array $response, array $ingredient, $amount) : array
+    {
+        $response[$ingredient['ingredient_id']]['ingredient_id'] = $ingredient['ingredient_id'];
+        $response[$ingredient['ingredient_id']]['ingredient_name'] = $ingredient['ingredient']->name;
+        $response[$ingredient['ingredient_id']]['ingredient_amount'] = $amount;
+        $response[$ingredient['ingredient_id']]['ingredient_measure'] = $ingredient['ingredient']->measure;
+
+        return $response;
+    }
 }

@@ -45,4 +45,21 @@ class Box extends Model
         return $query->whereBetween('delivery_date', [$firstDate, $secondDate]);
     }
 
+    public function scopeDeliveryDate($query, $date)
+    {
+        return $query->where('delivery_date', $date);
+    }
+
+    public function scopeSupplier($query, $supplier)
+    {
+        // return $query->with(['recipes.ingredient' => function ($query) use ($supplier) {
+        //     $query->whereIn('supplier', $supplier);
+        // }]);
+
+        return $query->leftJoin('box_recipes', 'boxes.id', '=', 'box_recipes.box_id')
+                    ->leftJoin('ingredient_recipe', 'ingredient_recipe.recipe_id', '=', 'box_recipes.recipe_id')
+                    ->leftJoin('ingredients', 'ingredients.id', '=', 'ingredient_recipe.ingredient_id')
+                    ->whereIn('ingredients.supplier', $supplier);
+    }
+
 }

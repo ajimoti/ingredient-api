@@ -37,6 +37,27 @@ class BoxRepository extends BaseRepository implements BoxInterface
     {
         $orderDate = Carbon::parse($request->order_date);
         $sevenDaysFromOrderDate = Carbon::parse($request->order_date)->addDays(7);
-        return $this->model->betweenDeliveryDates($orderDate, $sevenDaysFromOrderDate)->get();
+
+        $boxes = $this->filters(
+            $request,
+            $this->model->betweenDeliveryDates($orderDate, $sevenDaysFromOrderDate)
+        );
+// dd($boxes->toSql());
+        return $boxes->get();
+    }
+
+    private function filters(object $request, object $boxes)
+    {
+        if ($request->has('delivery_date')) {
+            $boxes->deliveryDate($request->input('delivery_date'));
+        }
+
+        if ($request->has('supplier')) {
+            $boxes->supplier(
+                explode(",", $request->input('supplier'))
+            );
+        }
+
+        return $boxes;
     }
 }

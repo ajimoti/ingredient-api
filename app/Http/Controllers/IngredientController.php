@@ -18,7 +18,6 @@ class IngredientController extends Controller
     public function index() : object
     {
         $all = $this->ingredient->paginate();
-
         return $this->sendJson($all->toArray(), "Ingredients list");
     }
 

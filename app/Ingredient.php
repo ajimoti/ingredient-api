@@ -35,4 +35,9 @@ class Ingredient extends Model
         return $this->belongsToMany('App\Recipe')->withPivot('amount')->withTimestamps();
     }
 
+    public function scopeSupplier($query, $supplier)
+    {
+        return $query->where('supplier', $supplier);
+    }
+
 }
