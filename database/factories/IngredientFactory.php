@@ -11,7 +11,7 @@ $factory->define(Ingredient::class, function (Faker $faker) {
     $measures = (new Ingredient())->measures();
 
     return [
-        "name"  => $faker->foodName(),
+        "name"  => $faker->fruitName(),
         "measure"  => $measures[array_rand($measures)],
         "supplier"  => $faker->name,
     ];
