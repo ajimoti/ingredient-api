@@ -7,6 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(Ingredient::class, function (Faker $faker) {
     return [
-        //
+        "name"  => $faker->name,
+        "measure"  => 'g',
+        "supplier"  => $faker->name,
     ];
 });

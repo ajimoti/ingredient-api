@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::prefix('ingredient')->name('ingredient.')->group(function () {
     Route::get('/list', 'IngredientController@index')->name('list');
     Route::post('/create', 'IngredientController@create')->name('create');
@@ -33,6 +29,6 @@ Route::prefix('box')->name('box.')->group(function () {
 });
 
 Route::prefix('company')->name('order.')->group(function () {
-    Route::post('/ingredients', 'OrderController@fulfill');
+    Route::get('/ingredients', 'OrderController@fulfill');
 });
 
