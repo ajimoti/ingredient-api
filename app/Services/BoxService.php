@@ -11,10 +11,10 @@ class BoxService
     protected $box;
     protected $boxRecipe;
 
-    public function __construct(BoxRepository $box, BoxRecipe $BoxRecipe)
+    public function __construct(BoxRepository $box, BoxRecipe $boxRecipe)
 	{
 		$this->box = $box;
-		$this->boxRecipe = $BoxRecipe;
+		$this->boxRecipe = $boxRecipe;
     }
 
     public function paginate() : object
