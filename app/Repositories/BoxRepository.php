@@ -42,7 +42,7 @@ class BoxRepository extends BaseRepository implements BoxInterface
             $request,
             $this->model->betweenDeliveryDates($orderDate, $sevenDaysFromOrderDate)
         );
-// dd($boxes->toSql());
+
         return $boxes->get();
     }
 
